@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Counter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+        #count-display {
+            font-size: 2rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Click the Button</h1>
+        <button id="counterBtn">Click Me!</button>
+        <p>Total Clicks: <span id="count-display">0</span></p>
+    </div>
+
+    <script>
+        let count = 0;
+
+        const button = document.getElementById('counterBtn');
+        const display = document.getElementById('count-display');
+
+        button.addEventListener('click', () => {
+            count++;
+            display.textContent = count;
+            console.log(`Button clicked! Current count: ${count}`);
+        });
+    </script>
+
+</body>
+</html>
