@@ -3,34 +3,6 @@ Description: EC2 Web Server for DevOps Assignment
 
 Resources:
 
-  WebServerInstance:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: t2.micro
-      ImageId: ami-0c02fb55956c7d316
-      IamInstanceProfile: EC2InstanceProfile
-      SecurityGroupIds:
-        - !Ref WebServerSecurityGroup
-      Tags:
-        - Key: Name
-          Value: DevOpsWebServer
-      UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          yum update -y
-          yum install -y httpd
-          systemctl start httpd
-          systemctl enable httpd
-
-          yum install -y ruby wget
-          cd /home/ec2-user
-          wget https://aws-codedeploy-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/latest/install
-          chmod +x ./install
-          ./install auto
-
-          systemctl enable codedeploy-agent
-          systemctl start codedeploy-agent
-
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -64,3 +36,30 @@ Resources:
     Properties:
       Roles:
         - !Ref EC2InstanceRole
+
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      ImageId: !Sub '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
+      SecurityGroupIds:
+        - !Ref WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: DevOpsWebServer
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          dnf update -y
+          dnf install -y httpd ruby wget
+          systemctl start httpd
+          systemctl enable httpd
+
+          cd /home/ec2-user
+          wget https://aws-codedeploy-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/latest/install
+          chmod +x ./install
+          ./install auto
+
+          systemctl enable codedeploy-agent
+          systemctl start codedeploy-agent
